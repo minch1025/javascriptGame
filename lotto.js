@@ -1,92 +1,73 @@
-// initialize "president"
-var president = Array(45)
-  .fill()
-  .map(function(value, index){
-    return index + 1;
+"use strict";
+const N = 45;
+const C = 6;
+
+(() => {
+  // master number set.
+  let president = new Array(45).fill().map((v, i) => i+1);
+  console.log(president);
+
+  // Pick C + 1 randoms.
+  // One for bonus.
+  let shuffled = randomPickup(president, C + 1);
+  let bonus = shuffled.pop(1);
+  console.log("shuffled: ", shuffled, "bonus: ", bonus);
+
+  let resultElement = document.getElementById("result");
+  let bonusElement = document.getElementById("bonus");
+
+  let balls = shuffled.map(n => createBall(n));
+  appendBall(resultElement, balls, 0, () => {
+    let bonusBall = createBall(bonus);
+    appendBall(bonusElement, [bonusBall], 0, () => {});
   });
+})();
 
-console.log(president);
 
-var shuffle = [];
 
-while(president.length > 0) {
-  var move = president.splice(
-    Math.floor(Math.random() * president.length),
-    1
-  )[0];
-  //하나만 뽀뱌아서 들여내기 
-  shuffle.push(move);
-  //하나만 뽑아서 뽑아오기 끝날 때까지 
-}
-
-console.log(shuffle);
-
-var bonus = shuffle[shuffle.length - 1];
-
-//length-1은 마지막 자릿수 구하기
-var correctNum = shuffle.slice(0, 6);
-
-//슬라이스 자리값 나누기
-console.log('correctNum', correctNum.sort(function(p, c){return c-p;}), 'bonus', bonus);
-
-//오름차순 내림차순 을 등록하기
-var result = document.getElementById('result');
-
-function drawingBall(number, result){
-  var ball = document.createElement('div');
-
-  ball.textContent = number;
-  ball.style.display = 'inline-block';
-  ball.style.border = '1px solid black';
-  ball.style.borderRadius = '10px';
-  ball.style.width = '20px';
-  ball.style.height = '20px';
-  ball.style.textAlign = 'center';
-  ball.style.marginRight = '10px';
-
-  // background color.
-  var background = '';
-  if(number <= 10){
-    backgrounds = 'red';
-  } else if(number <= 20){
-    backgrounds ='yellow';
-  } else if(number <= 30){
-    backgrounds = 'green';
-  } else if(number <= 40){
-    backgrounds = 'blue';
-  } else if(number <= 50){
-    backgrounds = 'orange';
-  } else{
-    backgrounds = 'purple';
+// Pickup n numbers from pickup at random from president.
+// president: number array
+// n: num of pickup
+function randomPickup(president, n){
+  var p = president;
+  var result = [];
+  for (var i=0; i<n; i++){
+    let idx = Math.floor(Math.random() * p.length);
+    result.push(p.splice(idx,1)[0])
   }
-
-  ball.style.background = backgrounds;
-
-  result.appendChild(ball);
+  return result;
 }
 
-setTimeout(function  callback() {
-  drawingBall(correctNum[0], result);
-}, 1000);
-// 밀리초 1000 - 1초
-setTimeout(function callback(){
-  drawingBall(correctNum[1],result);
-}, 2000);
-setTimeout(function callback(){
-  drawingBall(correctNum[2],result);
-}, 3000);
-setTimeout(function callback(){
-  drawingBall(correctNum[3],result);
-}, 4000);
-setTimeout(function callback(){
-  drawingBall(correctNum[4],result);
-}, 5000);
-setTimeout(function callback(){
-  drawingBall(correctNum[5],result);
-}, 6000);
+// ball object
+// num: ball number
+function createBall(num){
+  let el = document.createElement('div');
+  el.textContent = num;
+  el.className='ball';
 
-setTimeout(function callback(){
-  var S = document.getElementsByClassName('bonus')[0];
-  //클래스가 얼마나 설정될 지 모르기에 우선 [0]으로 지정해둠 
-  drawingBall(bonus, S);
-}, 7000);
+  el.style.background =
+    num <= 10 ? 'red' :
+    num <= 20 ? 'yellow':
+    num <= 30 ? 'green':
+    num <= 40 ? 'blue':
+    num <= 50 ? 'orange':
+    'purple';
+  return el;
+}
+
+// append ball
+// el: container elemenet
+// balls: ball element
+// n: current idx
+// cb: callback
+function appendBall(el, balls, n, cb){
+  setTimeout(() => {
+    el.appendChild(balls[n]);
+    if (n < balls.length - 1){
+      appendBall(el, balls, n+1, cb);
+    } else {
+      cb();
+    }
+  }, 200);
+}
+
