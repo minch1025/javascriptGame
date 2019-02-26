@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RockSissorsPaper</title>
+    <div class="game">
+    <style>
+    *{margin:0;padding:0;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box}::selection{background:#fb9fe5;text-shadow:none}a{color:#0088CC;text-decoration:none;outline:0}a:hover{color:#005580}a img{border:none}img{max-width:100%}html{font-size:100%}body{padding:5%;font:300 1.25em/1.6 monospace;background:#fff;color:#000;}h1{font-family:"Helvetica Neue",sans-serif;line-height:1;font-weight:300;margin-bottom:1em;}.game{padding:2em;background:#eee;}
+    </style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+   
+</head>
+<body>
+    <script>
+        var userChoice = prompt("Do you choose rock, paper or scissors? ");
+
+        if(! userChoice){
+            document.write("<p>Player1, you cheated Refresh this screen and fight like a man.</p>");
+        
+        }else{
+            document.write("<p>Player 1 : " +  + userChoice + "</p>");   
+        }
+        //computer choice
+        var computerChoice=Math.random();
+        if(computerChoice <0.34){
+            computerChoice ='rock';
+        }else if(computerChoice <=0.67) {
+            computerChoice = 'scissors';   
+        }else{
+            computerChoice='paper';
+        }
+        //Display computer choice
+        document.write("<p>Computer:" +" " +computerChoice+"</p>");
+        //compare
+        var compare = function(choice1,choice2){
+            if(choice1==choice2){
+            return "it`s same thing";
+            }
+             if(choice1 =="rock"){
+                //rock win!
+                if(choice2 =="scissors"){
+                    return "you win";
+                }
+                }else {
+                    return "you lose";
+                }
+            if(choice1 =="scissors"){
+                //rock win!
+                if(choice2 =="paper"){
+                    return "you win";
+                }
+                }else {
+                    return "you lose";
+                }
+            if(choice1 =="paper"){
+                //rock win!
+                if(choice2 =="rock"){
+                    return "you win";
+                }
+                }else{
+                    return "you lose";
+                }
+        }
+        //Run the compare function
+        var results = compare(userChoice,computerChoice);
+
+        //Display results
+        document.write("<br><hr><br>" + results);
+    </script>
+</div> 
+</body>
+</html>
