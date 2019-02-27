@@ -1,0 +1,15 @@
+div.ball{
+  box-shadow: 0 -9px 12px 8px rgba(0,0,0, .4)inset;
+  display: inline-block;
+  box-sizing: border-box;
+  border: 1px solid gray;
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  margin: 5px;
+  padding: 11px 0;
+  font-family: 'Courier New';
+  font-weight: bold;
+  font-size: 16px;
+}

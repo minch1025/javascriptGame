@@ -1,88 +1,52 @@
-//非同期練習中心
-//変数名はより詳しく！！！
-//１台１で
-var imageLocation = '0'; 
-var dictionary = {
-    scissor:'-142px',
-    rock:'0',
-    paper:'-284px'
-};
-//find -> 二重配列に使用　indexOf -> 一次配列に使用
-console.log(Object.entries(dictionary));
-//繰り返しと競合ができやすい場合は関数使用
-function computerChoice(imageLocation) {
-   return Object.entries(dictionary).find(function(v) {
-        return v[1] == imageLocation;
-    })[0];
+"use strict";
+
+// CONSTANTS
+const HANDS = ['rock', 'scissor', 'paper'];
+const LOCATION_MAP = [ '0', '-142px', '-284px'];
+const INTERVAL = 100; // 100ms
+
+// GLOBAL
+var timerId = -1;
+var cpuHand = 0;
+
+// attach event handler to buttons.
+document.querySelectorAll('.btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    stopAnimation();
+
+    let myHand = HANDS.indexOf(btn.textContent);
+    let result = judge(myHand);
+
+    console.log('cpu: ', HANDS[cpuHand], ', my hand: ', HANDS[myHand] ,' [' + result + ']');
+
+    // restart animation after 1000ms
+    setTimeout(startAnimation, 1000);
+  }); // end of addEventListener
+}); // end of forEach
+
+// ANIMATION START!
+startAnimation();
+
+// judgement!
+function judge(myHand){
+  // "cpuHand" is global.
+  return cpuHand == myHand ? 'even'
+    : (cpuHand - myHand + 3) % 3 == 1 ? 'win'
+    : 'loose';
 }
 
-var Interval = setInterval(() => { //setInterval は無限ループを見せる
-    if (imageLocation == dictionary.rock) {//全画面より以下に指定され他づつ画面が移動できる。
-        imageLocation = dictionary.scissor;
-    }   else if (imageLocation == dictionary.scissor) {
-        imageLocation = dictionary.paper;
-    }   else {
-        imageLocation = dictionary.rock;
-    }
-    document.querySelector('#computer').style.background =
-        'url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ' + 
-        imageLocation + ' 0';
-}, 100); //100は0.1秒
-//結果の確認のためsetIntervalを止める機能
+// start image animation.
+function startAnimation(){
+  timerId = setInterval(() => {
+    cpuHand = (cpuHand + 1) % 3;
+    document.getElementById('computer').style
+      .background = 'url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ' + LOCATION_MAP[cpuHand] + ' 0';
+  }, INTERVAL);
+  console.log('start timerID: ', timerId);
+}
 
-//htmlにクラスボタンを作成して省略する
-document.querySelectorAll('.btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        clearInterval(Interval); //一回停止させて結果を見ます。
-
-        setTimeout(function() {
-            Interval = setInterval(() => { //setInterval は無限ループを見せる
-                if (imageLocation == dictionary.rock) {//全画面より以下に指定され他づつ画面が移動できる。
-                    imageLocation = dictionary.scissor;
-                }   else if (imageLocation == dictionary.scissor) {
-                    imageLocation = dictionary.paper;
-                }   else {
-                    imageLocation = dictionary.rock;
-                }
-                document.querySelector('#computer').style.background =
-                    'url(https://en.pimg.jp/023/182/267/1/23182267.jpg) ' + 
-                    imageLocation + ' 0';
-            }, 100); //100は0.1秒
-        }, 1000);
-
-        var myChoice = this.textContent;
-        console.log(myChoice, computerChoice(imageLocation));
-        //ゲーム結果比較スタート
-        if (myChoice== 'scissor'){
-            if(computerChoice(imageLocation) == 'scissor'){
-                console.log('winwin');
-            }else if(computerChoice(imageLocation) == 'rock'){
-                console.log('you lose');
-                }else{
-                console.log('you win');
-                }
-
-        }else if(myChoice == 'rock'){
-            if(computerChoice(imageLocation) == 'rock'){
-                console.log('winwin');
-            }else if(computerChoice(imageLocation) == 'paper'){
-                console.log('you lose');
-                }else{
-                console.log('you win');
-                }
-       }else if(myChoice == 'paper'){
-            if(computerChoice(imageLocation) == 'paper'){
-                console.log('winwin');
-            }else if(computerChoice(imageLocation) == 'scissor'){
-                console.log('you lose');
-                }else{
-                console.log('you win');
-                }
-            }   
-        
-    });
-    //querySelector:最初に指定された１のみ入力
-    //querySelectorAll:全体的に選択範囲が広がる
-});
-
-
+// stop image animation.
+function stopAnimation(){
+  clearInterval(timerId);
+  console.log('stop timerID: ', timerId);
+}
